@@ -19,6 +19,12 @@
 	box-shadow: var(--tl-shadow-1);
 }
 
+@media (max-width: 700px) {
+	.example:has(.brainstorm-session-tools) .example__sidebar {
+		display: none;
+	}
+}
+
 @media (max-width: 600px) {
 	.brainstorm-session-tools {
 		margin-top: 52px;
