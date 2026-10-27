@@ -24,4 +24,6 @@ The `Tldraw` component renders the full tldraw editor as a regular React compone
 
 Import `tldraw/tldraw.css` alongside the component. Without it, the editor's UI has no styling.
 
+The badge in the top-right `SharePanel` slot shows the current page's shape count and selected shape count. It uses `useValue` to update both counts as the editor changes.
+
 By default the editor does not persist between refreshes or sync between tabs. To keep your work after a refresh, see the [persistence key example](https://tldraw.dev/examples/persistence-key).

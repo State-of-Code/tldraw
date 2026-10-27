@@ -1,0 +1,27 @@
+.shape-count-badge {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 8px;
+	padding: 8px 12px;
+	border: 1px solid var(--tl-color-panel-contrast);
+	border-radius: 8px;
+	background: var(--tl-color-panel);
+	color: var(--tl-color-text-1);
+	box-shadow: var(--tl-shadow-1);
+	font-family: var(--tl-font-sans);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	line-height: 16px;
+	white-space: nowrap;
+}
+
+.shape-count-badge strong {
+	font-weight: 600;
+}
+
+.shape-count-badge__divider {
+	width: 1px;
+	height: 14px;
+	background: var(--tl-color-divider);
+}
