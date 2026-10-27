@@ -1,0 +1,26 @@
+.brainstorm-session-tools {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 6px;
+	max-width: calc(100vw - 24px);
+	margin: 8px;
+	pointer-events: auto;
+}
+
+.brainstorm-session-tools .shape-count-badge {
+	margin: 0;
+}
+
+.brainstorm-session-tools > .tlui-button {
+	border: 1px solid var(--tl-color-divider);
+	border-radius: 8px;
+	background: var(--tl-color-panel);
+	box-shadow: var(--tl-shadow-1);
+}
+
+@media (max-width: 600px) {
+	.brainstorm-session-tools {
+		margin-top: 52px;
+	}
+}

@@ -26,4 +26,8 @@ Import `tldraw/tldraw.css` alongside the component. Without it, the editor's UI 
 
 The badge in the top-right `SharePanel` slot shows the current page's shape count and selected shape count. It uses `useValue` to update both counts as the editor changes.
 
+Click **Insert brainstorming board** to add **Ideas**, **In Progress**, and **Done** columns with blank sticky notes. Drag notes between columns and double-click them to write an idea. Inserting a board keeps existing shapes and can be undone.
+
+The five-minute session timer starts at **05:00**. Start it when you're ready, pause or resume as needed, and reset it for another session. At **00:00**, it stops and shows **Time's up**; it does not lock the canvas or remove your work.
+
 By default the editor does not persist between refreshes or sync between tabs. To keep your work after a refresh, see the [persistence key example](https://tldraw.dev/examples/persistence-key).

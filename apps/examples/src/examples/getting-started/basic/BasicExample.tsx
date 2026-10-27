@@ -1,5 +1,8 @@
 import { TLComponents, Tldraw, useEditor, useValue } from 'tldraw'
 import 'tldraw/tldraw.css'
+import { BrainstormBoardButton } from './BrainstormBoard'
+import { SessionTimer } from './SessionTimer'
+import './brainstorm-session.css'
 import './shape-count-badge.css'
 
 function ShapeCountBadge() {
@@ -22,8 +25,18 @@ function ShapeCountBadge() {
 	)
 }
 
+function SessionPanel() {
+	return (
+		<div className="brainstorm-session-tools">
+			<BrainstormBoardButton />
+			<SessionTimer />
+			<ShapeCountBadge />
+		</div>
+	)
+}
+
 const components: TLComponents = {
-	SharePanel: ShapeCountBadge,
+	SharePanel: SessionPanel,
 }
 
 export default function BasicExample() {
