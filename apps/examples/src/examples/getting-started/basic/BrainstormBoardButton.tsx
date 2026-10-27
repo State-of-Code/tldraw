@@ -77,15 +77,22 @@ export function insertBrainstormBoard(editor: Editor) {
 export function BrainstormBoardButton() {
 	const editor = useEditor()
 	const isReadonly = useValue('brainstorm board readonly', () => editor.getIsReadonly(), [editor])
+	const isCompact = useValue(
+		'brainstorm board compact layout',
+		() => editor.getViewportScreenBounds().width < 600,
+		[editor]
+	)
 
 	return (
 		<div className="tlui-menu" style={{ margin: 8, pointerEvents: 'all' }}>
 			<TldrawUiButton
 				type="normal"
 				disabled={isReadonly}
+				aria-label="Insert brainstorming board"
+				style={{ whiteSpace: 'nowrap', fontSize: isCompact ? 12 : undefined }}
 				onClick={() => insertBrainstormBoard(editor)}
 			>
-				Insert brainstorming board
+				{isCompact ? 'Insert board' : 'Insert brainstorming board'}
 			</TldrawUiButton>
 		</div>
 	)
