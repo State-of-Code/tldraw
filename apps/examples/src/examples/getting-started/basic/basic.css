@@ -1,0 +1,22 @@
+.shape-count-badge {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	align-self: flex-end;
+	margin: 8px 8px 0;
+	padding: 7px 10px;
+	border: 1px solid var(--color-divider);
+	border-radius: 8px;
+	background: var(--color-panel);
+	color: var(--color-text-1);
+	box-shadow: var(--shadow-1);
+	font-size: 12px;
+	line-height: 18px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.shape-count-badge__separator {
+	color: var(--color-text-3);
+}
