@@ -17,7 +17,7 @@ const COLUMN_GAP = 32
 const BOARD_WIDTH = COLUMN_WIDTH * 3 + COLUMN_GAP * 2
 const columns = [
 	{ name: 'Ideas', color: 'yellow' },
-	{ name: 'In progress', color: 'light-blue' },
+	{ name: 'In Progress', color: 'light-blue' },
 	{ name: 'Done', color: 'light-green' },
 ] as const
 
@@ -68,9 +68,26 @@ export function insertBrainstormBoard(editor: Editor) {
 	editor.markHistoryStoppingPoint('before brainstorming board')
 	editor.run(() => editor.createShapes(shapes))
 	editor.markHistoryStoppingPoint('after brainstorming board')
+	const viewport = editor.getViewportScreenBounds()
+	const left = 32
+	const right = viewport.w >= 600 ? 240 : 32
+	const top = viewport.w >= 600 ? 112 : 168
+	const bottom = 80
+	const boardHeight = bounds.h + 40
+	const zoom = Math.min(
+		1,
+		Math.max(1, viewport.w - left - right) / bounds.w,
+		Math.max(1, viewport.h - top - bottom) / boardHeight
+	)
+	// Reserve screen-space room for the controls, which zoomToBounds does not account for.
 	editor.zoomToBounds(
-		{ x: bounds.x, y: bounds.y - 40, w: bounds.w, h: bounds.h + 40 },
-		{ inset: 48, targetZoom: 1 }
+		{
+			x: bounds.x - left / zoom,
+			y: bounds.y - 40 - top / zoom,
+			w: bounds.w + (left + right) / zoom,
+			h: boardHeight + (top + bottom) / zoom,
+		},
+		{ inset: 0, targetZoom: zoom }
 	)
 }
 
