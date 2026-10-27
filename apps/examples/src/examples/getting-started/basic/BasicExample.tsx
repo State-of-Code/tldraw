@@ -2,8 +2,6 @@ import { DefaultSharePanel, TLComponents, Tldraw, track, useEditor } from 'tldra
 import 'tldraw/tldraw.css'
 import { BrainstormBoardButton } from './BrainstormBoardButton'
 
-const components = { TopPanel: BrainstormBoardButton }
-
 const ShapeCountPanel = track(function ShapeCountPanel() {
 	const editor = useEditor()
 	const shapeCount = editor.getCurrentPageShapeIds().size
@@ -37,6 +35,7 @@ const ShapeCountPanel = track(function ShapeCountPanel() {
 })
 
 const components: TLComponents = {
+	TopPanel: BrainstormBoardButton,
 	SharePanel: ShapeCountPanel,
 }
 
