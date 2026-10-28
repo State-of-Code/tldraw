@@ -35,6 +35,7 @@ import { trackedShapes, useDebugging } from '../hooks/useDebugging'
 import { usePerformance } from '../hooks/usePerformance'
 import { A11yResultTable } from './a11y'
 import { getDiff } from './diff'
+import { ShapeCountBadge } from './ShapeCountBadge'
 
 const ContextMenu = track(() => {
 	const editor = useEditor()
@@ -107,6 +108,7 @@ const Comments = track(() => {
 })
 
 const components: TLComponents = {
+	SharePanel: ShapeCountBadge,
 	ContextMenu,
 	DebugMenu: () => (
 		<DefaultDebugMenu>
