@@ -31,7 +31,7 @@ import {
 } from 'tldraw'
 import '@tldraw/commenting/commenting.css'
 import 'tldraw/tldraw.css'
-import { ShapeCountBadge } from '../examples/getting-started/basic/ShapeCountBadge'
+import { BrainstormingControls } from '../examples/getting-started/basic/BrainstormingControls'
 import { trackedShapes, useDebugging } from '../hooks/useDebugging'
 import { usePerformance } from '../hooks/usePerformance'
 import { A11yResultTable } from './a11y'
@@ -108,7 +108,7 @@ const Comments = track(() => {
 })
 
 const components: TLComponents = {
-	SharePanel: ShapeCountBadge,
+	SharePanel: BrainstormingControls,
 	ContextMenu,
 	DebugMenu: () => (
 		<DefaultDebugMenu>

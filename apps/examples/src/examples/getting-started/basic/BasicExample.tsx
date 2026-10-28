@@ -1,9 +1,9 @@
 import { TLComponents, Tldraw } from 'tldraw'
 import 'tldraw/tldraw.css'
-import { ShapeCountBadge } from './ShapeCountBadge'
+import { BrainstormingControls } from './BrainstormingControls'
 
 const components: TLComponents = {
-	SharePanel: ShapeCountBadge,
+	SharePanel: BrainstormingControls,
 }
 
 export default function BasicExample() {
