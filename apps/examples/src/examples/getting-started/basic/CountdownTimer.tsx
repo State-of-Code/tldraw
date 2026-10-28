@@ -1,6 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
 
 const DURATION_MS = 5 * 60 * 1000
+const buttonStyle: CSSProperties = {
+	color: 'inherit',
+	background: 'var(--tl-color-muted-2)',
+	border: '1px solid var(--tl-color-divider)',
+	borderRadius: 4,
+	padding: '4px 8px',
+	minHeight: 28,
+	font: 'inherit',
+}
 
 export function CountdownTimer() {
 	const [remainingMs, setRemainingMs] = useState(DURATION_MS)
@@ -59,8 +68,8 @@ export function CountdownTimer() {
 				maxWidth: 230,
 				padding: 6,
 				borderRadius: 8,
-				background: 'var(--color-panel)',
-				color: 'var(--color-text-1)',
+				background: 'var(--tl-color-panel)',
+				color: 'var(--tl-color-text-1)',
 				fontFamily: 'inherit',
 				fontSize: 12,
 				pointerEvents: 'auto',
@@ -79,16 +88,11 @@ export function CountdownTimer() {
 				onClick={toggleTimer}
 				disabled={isFinished}
 				aria-label={`${action} countdown`}
-				style={{ color: 'inherit', background: 'var(--color-muted-2)', borderRadius: 4 }}
+				style={buttonStyle}
 			>
 				{action}
 			</button>
-			<button
-				type="button"
-				onClick={resetTimer}
-				aria-label="Reset countdown"
-				style={{ color: 'inherit', background: 'var(--color-muted-2)', borderRadius: 4 }}
-			>
+			<button type="button" onClick={resetTimer} aria-label="Reset countdown" style={buttonStyle}>
 				Reset
 			</button>
 			<span role="status">{isFinished ? 'Time is up' : ''}</span>
