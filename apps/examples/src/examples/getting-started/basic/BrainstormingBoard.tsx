@@ -61,7 +61,10 @@ export function insertBrainstormingBoard(editor: Editor) {
 		editor.selectNone()
 	})
 	editor.markHistoryStoppingPoint('brainstorming board inserted')
-	editor.zoomToBounds(bounds, { inset: 64, animation: { duration: 250 } })
+	editor.zoomToBounds(bounds, {
+		inset: Math.min(200, editor.getViewportScreenBounds().width * 0.25),
+		animation: { duration: 250 },
+	})
 	editor.focus()
 }
 
