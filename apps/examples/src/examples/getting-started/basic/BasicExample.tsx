@@ -1,6 +1,6 @@
 import { TLComponents, Tldraw } from 'tldraw'
 import 'tldraw/tldraw.css'
-import { ShapeCountBadge } from '../../../misc/ShapeCountBadge'
+import { ShapeCountBadge } from './ShapeCountBadge'
 
 const components: TLComponents = {
 	SharePanel: ShapeCountBadge,

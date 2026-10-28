@@ -31,11 +31,11 @@ import {
 } from 'tldraw'
 import '@tldraw/commenting/commenting.css'
 import 'tldraw/tldraw.css'
+import { ShapeCountBadge } from '../examples/getting-started/basic/ShapeCountBadge'
 import { trackedShapes, useDebugging } from '../hooks/useDebugging'
 import { usePerformance } from '../hooks/usePerformance'
 import { A11yResultTable } from './a11y'
 import { getDiff } from './diff'
-import { ShapeCountBadge } from './ShapeCountBadge'
 
 const ContextMenu = track(() => {
 	const editor = useEditor()
