@@ -1,6 +1,22 @@
-import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { CSSProperties, useCallback, useEffect, useState } from 'react'
+import { Editor, useEditor } from 'tldraw'
 
 const DURATION_MS = 5 * 60 * 1000
+interface TimerState {
+	remainingMs: number
+	deadline: number | null
+}
+
+// Focus mode unmounts SharePanel; keep its timer for the lifetime of this editor only.
+const timers = new WeakMap<Editor, TimerState>()
+
+function getTimer(editor: Editor): TimerState {
+	const timer = timers.get(editor) ?? { remainingMs: DURATION_MS, deadline: null }
+	if (timer.deadline === null) return timer
+	const remainingMs = Math.max(0, timer.deadline - Date.now())
+	return { remainingMs, deadline: remainingMs === 0 ? null : timer.deadline }
+}
+
 const buttonStyle: CSSProperties = {
 	color: 'inherit',
 	background: 'var(--tl-color-muted-2)',
@@ -12,36 +28,40 @@ const buttonStyle: CSSProperties = {
 }
 
 export function CountdownTimer() {
-	const [remainingMs, setRemainingMs] = useState(DURATION_MS)
-	const [isRunning, setIsRunning] = useState(false)
-	const deadline = useRef(0)
+	const editor = useEditor()
+	const [timer, setTimer] = useState(() => getTimer(editor))
+	const { remainingMs, deadline } = timer
+	const isRunning = deadline !== null
+	const updateTimer = useCallback(
+		(next: TimerState) => {
+			timers.set(editor, next)
+			setTimer(next)
+		},
+		[editor]
+	)
 
 	useEffect(() => {
-		if (!isRunning) return
+		if (deadline === null) return
 
 		const interval = window.setInterval(() => {
 			// A deadline keeps background-tab throttling from extending the countdown.
-			const remaining = Math.max(0, deadline.current - Date.now())
-			setRemainingMs(remaining)
-			if (remaining === 0) setIsRunning(false)
+			const remainingMs = Math.max(0, deadline - Date.now())
+			updateTimer({ remainingMs, deadline: remainingMs === 0 ? null : deadline })
 		}, 100)
 
 		return () => window.clearInterval(interval)
-	}, [isRunning])
+	}, [deadline, updateTimer])
 
 	function toggleTimer() {
-		if (isRunning) {
-			setRemainingMs(Math.max(0, deadline.current - Date.now()))
-			setIsRunning(false)
+		if (deadline !== null) {
+			updateTimer({ remainingMs: Math.max(0, deadline - Date.now()), deadline: null })
 		} else if (remainingMs > 0) {
-			deadline.current = Date.now() + remainingMs
-			setIsRunning(true)
+			updateTimer({ remainingMs, deadline: Date.now() + remainingMs })
 		}
 	}
 
 	function resetTimer() {
-		setIsRunning(false)
-		setRemainingMs(DURATION_MS)
+		updateTimer({ remainingMs: DURATION_MS, deadline: null })
 	}
 
 	const totalSeconds = Math.ceil(remainingMs / 1000)

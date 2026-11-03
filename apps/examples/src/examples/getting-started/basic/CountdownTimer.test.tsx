@@ -5,6 +5,9 @@ import { CountdownTimer } from './CountdownTimer'
 
 let container: HTMLDivElement
 let root: Root
+let editor: object
+
+vi.mock('tldraw', () => ({ useEditor: () => editor }))
 
 function click(label: string) {
 	const button = container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)
@@ -17,6 +20,7 @@ function time() {
 }
 
 beforeEach(() => {
+	editor = {}
 	vi.useFakeTimers()
 	vi.setSystemTime(new Date('2026-01-01T00:00:00Z'))
 	vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
@@ -34,6 +38,63 @@ afterEach(() => {
 })
 
 describe('CountdownTimer', () => {
+	it('keeps the running deadline when focus mode unmounts and remounts the controls', () => {
+		click('Start countdown')
+		act(() => vi.advanceTimersByTime(1_250))
+		act(() => root.render(null))
+		expect(vi.getTimerCount()).toBe(0)
+		act(() => vi.advanceTimersByTime(10_000))
+		act(() => root.render(<CountdownTimer />))
+		expect(time()).toBe('04:49')
+		expect(container.querySelector('button')?.textContent).toBe('Pause')
+		act(() => vi.advanceTimersByTime(800))
+		expect(time()).toBe('04:48')
+	})
+
+	it('keeps an exact paused remainder across a remount', () => {
+		click('Start countdown')
+		act(() => vi.advanceTimersByTime(1_250))
+		click('Pause countdown')
+		act(() => root.render(null))
+		act(() => vi.advanceTimersByTime(10_000))
+		act(() => root.render(<CountdownTimer />))
+		expect(time()).toBe('04:59')
+		expect(container.querySelector('button')?.textContent).toBe('Resume')
+		expect(vi.getTimerCount()).toBe(0)
+		click('Resume countdown')
+		act(() => vi.advanceTimersByTime(800))
+		expect(time()).toBe('04:58')
+	})
+
+	it('shows completion immediately when the deadline expires while unmounted', () => {
+		click('Start countdown')
+		act(() => root.render(null))
+		act(() => vi.advanceTimersByTime(301_000))
+		act(() => root.render(<CountdownTimer />))
+		expect(time()).toBe('00:00')
+		expect(container.querySelector('button')?.disabled).toBe(true)
+		expect(container.querySelector('[role="status"]')?.textContent).toBe('Time is up')
+		expect(vi.getTimerCount()).toBe(0)
+		click('Reset countdown')
+		expect(time()).toBe('05:00')
+	})
+
+	it('does not reuse a timer from a different editor', () => {
+		click('Start countdown')
+		act(() => vi.advanceTimersByTime(12_000))
+		act(() => root.render(null))
+		const originalEditor = editor
+		editor = {}
+		act(() => root.render(<CountdownTimer />))
+		expect(time()).toBe('05:00')
+		expect(container.querySelector('button')?.textContent).toBe('Start')
+		act(() => root.render(null))
+		editor = originalEditor
+		act(() => root.render(<CountdownTimer />))
+		expect(time()).toBe('04:48')
+		expect(container.querySelector('button')?.textContent).toBe('Pause')
+	})
+
 	it('starts paused at five minutes and resumes from the exact paused remainder', () => {
 		expect(time()).toBe('05:00')
 		act(() => vi.advanceTimersByTime(10_000))
