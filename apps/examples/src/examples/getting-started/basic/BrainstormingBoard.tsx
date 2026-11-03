@@ -2,7 +2,7 @@ import { Box, createShapeId, Editor, TLShapePartial, TldrawUiButton, useEditor }
 
 const columns = [
 	{ name: 'Ideas', color: 'yellow' },
-	{ name: 'In Progress', color: 'light-blue' },
+	{ name: 'In progress', color: 'light-blue' },
 	{ name: 'Done', color: 'light-green' },
 ] as const
 
@@ -11,7 +11,10 @@ const columnHeight = 740
 const columnGap = 32
 const boardWidth = columns.length * columnWidth + (columns.length - 1) * columnGap
 
-export function insertBrainstormingBoard(editor: Editor) {
+export function insertBrainstormingBoard(
+	editor: Editor,
+	{ controlsBottom }: { controlsBottom?: number } = {}
+) {
 	const center = editor.getViewportPageBounds().center
 	const bounds = new Box(
 		center.x - boardWidth / 2,
@@ -61,19 +64,38 @@ export function insertBrainstormingBoard(editor: Editor) {
 		editor.selectNone()
 	})
 	editor.markHistoryStoppingPoint('brainstorming board inserted')
-	editor.zoomToBounds(bounds, {
-		inset: Math.min(200, editor.getViewportScreenBounds().width * 0.25),
+	const viewport = editor.getViewportScreenBounds()
+	const topPadding = Math.max(16, (controlsBottom ?? viewport.y + 48) - viewport.y) + 32
+	const bottomPadding = 72
+	const sidePadding = 16
+	const zoom = Math.min(
+		Math.max(1, viewport.w - sidePadding * 2) / bounds.w,
+		Math.max(1, viewport.h - topPadding - bottomPadding) / bounds.h
+	)
+	// zoomToBounds splits its inset evenly; page-space padding reserves the actual toolbar area.
+	const framingBounds = new Box(
+		bounds.x - sidePadding / zoom,
+		bounds.y - topPadding / zoom,
+		bounds.w + (sidePadding * 2) / zoom,
+		bounds.h + (topPadding + bottomPadding) / zoom
+	)
+	editor.zoomToBounds(framingBounds, {
+		inset: 0,
 		animation: { duration: 250 },
 	})
 	editor.focus()
 }
 
-export function BrainstormingBoardButton() {
+export function BrainstormingBoardButton({
+	getControlsBottom,
+}: {
+	getControlsBottom?(): number | undefined
+}) {
 	const editor = useEditor()
 	return (
 		<TldrawUiButton
 			type="normal"
-			onClick={() => insertBrainstormingBoard(editor)}
+			onClick={() => insertBrainstormingBoard(editor, { controlsBottom: getControlsBottom?.() })}
 			style={{
 				pointerEvents: 'auto',
 				background: 'var(--tl-color-panel)',

@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useEditor, useValue } from 'tldraw'
 import { BrainstormingBoardButton } from './BrainstormingBoard'
 import { CountdownTimer } from './CountdownTimer'
@@ -5,6 +6,7 @@ import { ShapeCountBadge } from './ShapeCountBadge'
 
 export function BrainstormingControls() {
 	const editor = useEditor()
+	const controlsRef = useRef<HTMLDivElement>(null)
 	const viewportWidth = useValue(
 		'brainstorming toolbar width',
 		() => editor.getViewportScreenBounds().width,
@@ -12,6 +14,7 @@ export function BrainstormingControls() {
 	)
 	return (
 		<div
+			ref={controlsRef}
 			aria-label="Brainstorming controls"
 			style={{
 				display: 'flex',
@@ -24,7 +27,9 @@ export function BrainstormingControls() {
 				pointerEvents: 'auto',
 			}}
 		>
-			<BrainstormingBoardButton />
+			<BrainstormingBoardButton
+				getControlsBottom={() => controlsRef.current?.getBoundingClientRect().bottom}
+			/>
 			<CountdownTimer />
 			<ShapeCountBadge />
 		</div>
