@@ -135,6 +135,43 @@ describe('brainstorming board insertion', () => {
 		}
 	)
 
+	it('keeps the lowest notes above stacked Actions and Tools at 320 × 360', () => {
+		vi.mocked(editor.zoomToBounds).mockRestore()
+		const zoomToBounds = editor.zoomToBounds.bind(editor)
+		vi.spyOn(editor, 'zoomToBounds').mockImplementation((bounds, options) =>
+			zoomToBounds(bounds, { ...options, animation: undefined, immediate: true })
+		)
+		editor.setScreenBounds({ x: 0, y: 0, w: 320, h: 360 })
+		const toolbar = document.createElement('div')
+		toolbar.className = 'tlui-main-toolbar'
+		editor.getContainer().append(toolbar)
+		for (const [top, height] of [
+			[262, 44],
+			[304, 48],
+		]) {
+			const row = document.createElement('div')
+			row.setAttribute('role', 'toolbar')
+			vi.spyOn(row, 'getBoundingClientRect').mockReturnValue(
+				DOMRect.fromRect({ x: 0, y: top, width: 320, height })
+			)
+			toolbar.append(row)
+		}
+		try {
+			insertBrainstormingBoard(editor, { controlsBottom: 168 })
+			const shapes = editor.getCurrentPageShapes()
+			for (const shape of shapes) {
+				const bounds = editor.getShapePageBounds(shape)!
+				const bottom = editor.pageToScreen({ x: bounds.maxX, y: bounds.maxY }).y
+				expect(bottom).toBeLessThanOrEqual(262 - 8 + 0.001)
+			}
+			const frame = shapes.find((shape) => shape.type === 'frame')!
+			const frameTop = editor.pageToScreen({ x: frame.x, y: frame.y }).y
+			expect(frameTop - 32).toBeGreaterThanOrEqual(168 - 0.001)
+		} finally {
+			toolbar.remove()
+		}
+	})
+
 	it('measures the controls again on every insertion after their layout changes', () => {
 		vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
 		const container = document.createElement('div')

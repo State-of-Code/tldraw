@@ -66,7 +66,15 @@ export function insertBrainstormingBoard(
 	editor.markHistoryStoppingPoint('brainstorming board inserted')
 	const viewport = editor.getViewportScreenBounds()
 	const topPadding = Math.max(16, (controlsBottom ?? viewport.y + 48) - viewport.y) + 32
-	const bottomPadding = 72
+	const bottomToolbars = Array.from(
+		editor
+			.getContainer()
+			.querySelectorAll('.tlui-main-toolbar, .tlui-main-toolbar [role="toolbar"]')
+	)
+		.map((element) => element.getBoundingClientRect())
+		.filter((rect) => rect.width > 0 && rect.height > 0)
+	const toolbarTop = Math.min(viewport.maxY, ...bottomToolbars.map((rect) => rect.top))
+	const bottomPadding = Math.max(72, viewport.maxY - toolbarTop + 8)
 	const sidePadding = 16
 	const zoom = Math.min(
 		Math.max(1, viewport.w - sidePadding * 2) / bounds.w,
